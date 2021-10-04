@@ -1,11 +1,19 @@
 
-.PHONY: all clean
+.PHONY: all clean copymono
 
 all: consumer
 
 MANAGED_DIR=../bin/Debug/net6.0
 PUBLISH_DIR=$(MANAGED_DIR)/osx-x64/publish
 HOST_DIR=./host
+
+R=$(HOME)/work/dotnet-runtime/runtime/artifacts/bin/mono/OSX.x64.Release
+
+copymono:
+	cp $(R)/libmono-component-* $(HOST_DIR)
+	cp $(R)/libcoreclr.dylib* $(HOST_DIR)
+	cp $(R)/System.Private.CoreLib.dll $(HOST_DIR)
+
 
 $(HOST_DIR)/.touch-prepare-host: $(MANAGED_DIR)/dnne_sampleNE.dylib $(PUBLISH_DIR)/dnne_sample.runtimeconfig.json $(PUBLISH_DIR)/dnne_sample.deps.json $(PUBLISH_DIR)/*.dll $(PUBLISH_DIR)/*.dylib
 	mkdir -p ./host
