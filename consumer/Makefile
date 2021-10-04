@@ -4,19 +4,22 @@
 all: consumer
 
 MANAGED_DIR=../bin/Debug/net6.0
+PUBLISH_DIR=$(MANAGED_DIR)/osx-x64/publish
+HOST_DIR=./host
 
-libdnne_sampleNE.dylib: $(MANAGED_DIR)/dnne_sampleNE.dylib
-	cp $< $@ 
-	install_name_tool -id libdnne_sampleNE.dylib ./libdnne_sampleNE.dylib
+$(HOST_DIR)/.touch-prepare-host: $(MANAGED_DIR)/dnne_sampleNE.dylib $(PUBLISH_DIR)/dnne_sample.runtimeconfig.json $(PUBLISH_DIR)/dnne_sample.deps.json $(PUBLISH_DIR)/*.dll $(PUBLISH_DIR)/*.dylib
+	mkdir -p ./host
+	cp $(MANAGED_DIR)/dnne_sampleNE.dylib $(HOST_DIR)/libdnne_sampleNE.dylib
+	cp $(PUBLISH_DIR)/*.dylib $(HOST_DIR)
+	install_name_tool -id libdnne_sampleNE.dylib $(HOST_DIR)/libdnne_sampleNE.dylib
+	cp $(PUBLISH_DIR)/*.dll $(HOST_DIR)
+	cp $(PUBLISH_DIR)/dnne_sample.deps.json $(HOST_DIR)
+	cp $(PUBLISH_DIR)/dnne_sample.runtimeconfig.json $(HOST_DIR)
+	touch $@
 
-dnne_sample.runtimeconfig.json: $(MANAGED_DIR)/dnne_sample.runtimeconfig.json
-	cp $< $@
-
-dnne_sample.dll: $(MANAGED_DIR)/dnne_sample.dll
-	cp $< $@
-
-consumer: main.c libdnne_sampleNE.dylib dnne_sample.dll dnne_sample.runtimeconfig.json
-	clang -o consumer main.c -I$(MANAGED_DIR) -L. -ldnne_sampleNE
+consumer: main.c $(HOST_DIR)/.touch-prepare-host
+	clang -o consumer main.c -I$(MANAGED_DIR) -L$(HOST_DIR) -ldnne_sampleNE
+	install_name_tool -change libdnne_sampleNE.dylib @executable_path/host/libdnne_sampleNE.dylib ./consumer
 
 clean:
-	-rm -f consumer libdnne_sampleNE.dylib dnne_sample.dll dnne_sample.runtimeconfig.json
+	-rm -rf consumer $(HOST_DIR)

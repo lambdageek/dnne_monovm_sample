@@ -11,4 +11,8 @@
     <PackageReference Include="DNNE" Version="1.*" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DnneSelfContained_Experimental>true</DnneSelfContained_Experimental>
+  </PropertyGroup>
+
 </Project>

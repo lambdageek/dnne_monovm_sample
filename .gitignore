@@ -453,7 +453,5 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-consumer/*.dylib
-consumer/*.dll
-consumer/*.runtimeconfig.json
 consumer/consumer
+consumer/host/*
