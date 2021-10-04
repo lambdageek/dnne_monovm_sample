@@ -1,6 +1,14 @@
+# Sample Mono DNNE embedding
 
+## What is it
 
-# Building
+This is an example of using [DNNE](https://github.com/AaronRobinsonMSFT/DNNE) to invoke a MonoVM runtime.
+
+## Requirements
+
+.NET 7
+
+## Building
 
 ```console
 
@@ -12,7 +20,7 @@ $ make -C consumer
 
 To use Mono, pass `-p:UseMonoRuntime=true` to both `dotnet` calls
 
-# Running
+## Running
 
 ```console
 $ ./consumer/consumer
@@ -22,7 +30,7 @@ System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d
 .NET 6.0.0-rc.2.21470.23
 ```
 
-# With local mono
+## With local mono
 
 Build with
 
